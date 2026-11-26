@@ -1,0 +1,34 @@
+﻿# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Build output
+dist/
+dist-electron/
+release/
+release2/
+release_fresh/
+release2_new/
+build/*
+coverage/
+
+# 打包所需资源需保留
+!build/icon.ico
+!build/icon.png
+
+# Local runtime
+.env
+.env.*
+!.env.example
+*.log
+.tmp/
+temp/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.tmp-dev-pids

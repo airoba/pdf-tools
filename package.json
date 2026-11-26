@@ -1,0 +1,82 @@
+{
+  "name": "xiaoyejiang-doc-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PDF处理工具：本机离线 PDF 处理桌面软件",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:web\" \"npm:dev:electron\"",
+    "dev:web": "vite --config apps/desktop/vite.config.ts",
+    "dev:electron": "node scripts/build-electron.mjs && wait-on tcp:5173 && electron .",
+    "build": "vue-tsc -p apps/desktop/tsconfig.app.json && vite build --config apps/desktop/vite.config.ts && node scripts/build-electron.mjs",
+    "dist:win": "npm run build && electron-builder --win portable --x64",
+    "preview": "vite preview --config apps/desktop/vite.config.ts",
+    "lint": "vue-tsc -p apps/desktop/tsconfig.app.json --noEmit",
+    "service:dev": "python -m app.main"
+  },
+  "main": "dist-electron/electron/main.js",
+  "build": {
+    "appId": "com.xiaoyejiang.doctools",
+    "productName": "PDF处理工具",
+    "electronDist": "node_modules/electron/dist",
+    "electronVersion": "42.3.0",
+    "directories": {
+      "output": "release"
+    },
+    "asar": true,
+    "afterPack": "scripts/prepare-win-exe.cjs",
+    "files": [
+      "dist/desktop/**/*",
+      "dist-electron/electron/main.js",
+      "dist-electron/electron/preload.cjs",
+      "package.json"
+    ],
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
+    },
+    "win": {
+      "artifactName": "${productName}.${ext}",
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "customNsisBinary": {
+        "url": "https://mirrors.huaweicloud.com/electron-builder-binaries/nsis-3.0.4.1/nsis-3.0.4.1.7z",
+        "checksum": "VKMiizYdmNdJOWpRGz4trl4lD++BvYP2irAXpMilheUP0pc93iKlWAoP843Vlraj8YG19CVn0j+dCo/hURz9+Q==",
+        "version": "3.0.4.1"
+      },
+      "customNsisResources": {
+        "url": "https://mirrors.huaweicloud.com/electron-builder-binaries/nsis-resources-3.4.1/nsis-resources-3.4.1.7z",
+        "checksum": "Dqd6g+2buwwvoG1Vyf6BHR1b+25QMmPcwZx40atOT57gH27rkjOei1L0JTldxZu4NFoEmW4kJgZ3DlSWVON3+Q==",
+        "version": "3.4.1"
+      }
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "@vitejs/plugin-vue": "latest",
+    "concurrently": "latest",
+    "electron": "^42.3.0",
+    "electron-builder": "^26.8.1",
+    "element-plus": "^2.14.1",
+    "esbuild": "^0.28.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.7.284",
+    "pinia": "latest",
+    "rcedit": "^5.0.2",
+    "typescript": "latest",
+    "vite": "latest",
+    "vue": "latest",
+    "vue-router": "latest",
+    "vue-tsc": "latest",
+    "wait-on": "latest"
+  }
+}
